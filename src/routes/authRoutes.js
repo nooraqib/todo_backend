@@ -16,7 +16,6 @@ router.post("/register", (req, res) => {
     const result = insertUser.run(username, hashPassword);
 
     const todo = `Hello :): Add your first todo`;
-    console.log(result, "results");
 
     const insertTodos = db.prepare(
       `INSERT INTO todos(user_id , task) VALUES(?,?)`
@@ -34,8 +33,6 @@ router.post("/register", (req, res) => {
     if (err.code === "SQLITE_CONSTRAINT_UNIQUE") {
       return res.status(400).json({ error: "Username already taken" });
     }
-
-    console.log(err, "registration");
     res.sendStatus(500);
   }
 });
@@ -45,7 +42,6 @@ router.post("/login", (req, res) => {
   try {
     const getUser = db.prepare("SELECT * FROM users WHERE username = ?");
     const user = getUser.get(username);
-    console.log(user, "user");
     if (!user) {
       return res.status(404).send({ message: "User not found" });
     }
@@ -60,7 +56,6 @@ router.post("/login", (req, res) => {
     });
     res.json({ token });
   } catch (err) {
-    console.log(err, "login");
     res.sendStatus(500);
   }
 });

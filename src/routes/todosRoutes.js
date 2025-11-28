@@ -8,12 +8,10 @@ const router = express.Router();
 router.get("/", (req, res) => {
   const getTodos = db.prepare("SELECT * FROM todos WHERE user_id = ?");
   const todos = getTodos.all(req.userid);
-  console.log(req.userid, "todos----");
   res.json(todos);
 });
 
 router.post("/", (req, res) => {
-  console.log("is it run ");
   const { task } = req.body;
   const insertTodo = db.prepare(
     `INSERT INTO todos (user_id, task) VALUES(?, ?)`
@@ -23,7 +21,6 @@ router.post("/", (req, res) => {
     res.json({ id: insertTodo.lastID, task, completed: 0 });
   } catch (err) {
     res.status(400).json({ message: "some thing went wrong" });
-    console.log(err, "error on post request");
   }
 });
 
@@ -38,10 +35,19 @@ router.put("/:id", (req, res) => {
     updatedQuery.run(completed, id);
     res.json({ message: "completed" });
   } catch (err) {
-    console.log(err, "err");
+    res.status(400).json({ message: "some thing went wrong" });
   }
 });
 
-router.delete("/:id", (req, res) => {});
+router.delete("/:id", (req, res) => {
+  const { id } = req.params;
+  try {
+    const deleteQuery = db.prepare(`DELETE FROM todos WHERE id = ?`);
+    deleteQuery.run(id);
+    res.json({ message: "deleted" });
+  } catch (err) {
+    res.status(400).json({ message: "some thing went wrong" });
+  }
+});
 
 export default router;
