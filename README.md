@@ -246,11 +246,3 @@ This API provides:
 ✔ JWT-based protected routes
 ✔ CRUD todos
 ✔ SQLite fast local storage
-
----
-
-If you want, I can also generate:
-
-✅ API Documentation (Swagger-like)
-✅ Folder structure
-✅ ER Diagram
